@@ -92,7 +92,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
       isStreaming = false,
       onStreamingChange,
       model,
-      setModel,
+      setModel: _setModel,
       provider,
       setProvider,
       providerList,
@@ -430,8 +430,6 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                   provider={provider}
                   setProvider={setProvider}
                   providerList={providerList || (PROVIDER_LIST as ProviderInfo[])}
-                  model={model}
-                  setModel={setModel}
                   modelList={modelList}
                   apiKeys={apiKeys}
                   isModelLoading={isModelLoading}

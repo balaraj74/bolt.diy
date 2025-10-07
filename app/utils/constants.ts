@@ -2,11 +2,13 @@ import { LLMManager } from '~/lib/modules/llm/manager';
 import type { Template } from '~/types/template';
 
 export const WORK_DIR_NAME = 'project';
-export const WORK_DIR = `/home/${WORK_DIR_NAME}`;
+export const WORK_DIR = `${process.env.HOME || '/home'}/${WORK_DIR_NAME}`;
 export const MODIFICATIONS_TAG_NAME = 'bolt_file_modifications';
 export const MODEL_REGEX = /^\[Model: (.*?)\]\n\n/;
 export const PROVIDER_REGEX = /\[Provider: (.*?)\]\n\n/;
-export const DEFAULT_MODEL = 'claude-3-5-sonnet-latest';
+export { MODELS, type ModelId } from '~/lib/stores/models';
+
+export { DEFAULT_MODEL } from '~/lib/stores/models';
 export const PROMPT_COOKIE_KEY = 'cachedPrompt';
 export const TOOL_EXECUTION_APPROVAL = {
   APPROVE: 'Yes, approved.',
@@ -92,7 +94,7 @@ export const STARTER_TEMPLATES: Template[] = [
     name: 'Sveltekit',
     label: 'SvelteKit',
     description: 'SvelteKit starter template for building fast, efficient web applications',
-    githubRepo: 'bolt-sveltekit-template',
+    githubRepo: 'xKevIsDev/bolt-sveltekit-template',
     tags: ['svelte', 'sveltekit', 'typescript'],
     icon: 'i-bolt:svelte',
   },
@@ -141,7 +143,7 @@ export const STARTER_TEMPLATES: Template[] = [
     label: 'SolidJS Tailwind',
     description: 'Lightweight SolidJS starter template for building fast static websites',
     githubRepo: 'xKevIsDev/solidjs-ts-tw',
-    tags: ['solidjs'],
+    tags: ['solidjs', 'typescript', 'tailwind', 'frontend', 'minimal'],
     icon: 'i-bolt:solidjs',
   },
 ];

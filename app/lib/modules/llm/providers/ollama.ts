@@ -37,7 +37,22 @@ export default class OllamaProvider extends BaseProvider {
     baseUrlKey: 'OLLAMA_API_BASE_URL',
   };
 
-  staticModels: ModelInfo[] = [];
+  staticModels: ModelInfo[] = [
+    {
+      name: 'ollama-llama2',
+      label: 'Llama 2 (Local)',
+      provider: 'Ollama',
+      maxTokenAllowed: 4096,
+      maxCompletionTokens: 2048,
+    },
+    {
+      name: 'ollama-codellama',
+      label: 'CodeLlama (Local)',
+      provider: 'Ollama',
+      maxTokenAllowed: 4096,
+      maxCompletionTokens: 2048,
+    },
+  ];
 
   private _convertEnvToRecord(env?: Env): Record<string, string> {
     if (!env) {

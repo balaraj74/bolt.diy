@@ -1,4 +1,7 @@
 import type { ModelInfo } from '~/lib/modules/llm/types';
+import type { MODELS } from '~/utils/constants';
+
+export type ModelId = keyof typeof MODELS;
 
 export type ProviderInfo = {
   staticModels: ModelInfo[];

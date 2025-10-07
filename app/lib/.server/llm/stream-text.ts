@@ -80,7 +80,7 @@ export async function streamText(props: {
     chatMode,
     designScheme,
   } = props;
-  let currentModel = DEFAULT_MODEL;
+  let currentModel: string = DEFAULT_MODEL;
   let currentProvider = DEFAULT_PROVIDER.name;
   let processedMessages = messages.map((message) => {
     const newMessage = { ...message };

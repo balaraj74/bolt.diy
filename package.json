@@ -1,14 +1,14 @@
 {
-  "name": "bolt",
-  "description": "An AI Agent",
+  "name": "codeforge-ai",
+  "description": "CodeForge AI - Your Intelligent Coding Assistant",
   "private": true,
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
   "version": "1.0.0",
   "author": {
-    "name": "bolt.diy team",
-    "email": "maintainers@bolt.diy"
+    "name": "CodeForge AI team",
+    "email": "maintainers@codeforge.ai"
   },
   "scripts": {
     "deploy": "npm run build && wrangler pages deploy",
@@ -22,9 +22,9 @@
     "start:unix": "bindings=$(./bindings.sh) && wrangler pages dev ./build/client $bindings",
     "start": "node -e \"const { spawn } = require('child_process'); const isWindows = process.platform === 'win32'; const cmd = isWindows ? 'npm run start:windows' : 'npm run start:unix'; const child = spawn(cmd, { shell: true, stdio: 'inherit' }); child.on('exit', code => process.exit(code));\"",
     "dockerstart": "bindings=$(./bindings.sh) && wrangler pages dev ./build/client $bindings --ip 0.0.0.0 --port 5173 --no-show-interactive-dev-session",
-    "dockerrun": "docker run -it -d --name bolt-ai-live -p 5173:5173 --env-file .env.local bolt-ai",
-    "dockerbuild:prod": "docker build -t bolt-ai:production -t bolt-ai:latest --target bolt-ai-production .",
-    "dockerbuild": "docker build -t bolt-ai:development -t bolt-ai:latest --target bolt-ai-development .",
+    "dockerrun": "docker run -it -d --name codeforge-ai-live -p 5173:5173 --env-file .env.local codeforge-ai",
+    "dockerbuild:prod": "docker build -t codeforge-ai:production -t codeforge-ai:latest --target codeforge-ai-production .",
+    "dockerbuild": "docker build -t codeforge-ai:development -t codeforge-ai:latest --target codeforge-ai-development .",
     "typecheck": "tsc",
     "typegen": "wrangler types",
     "preview": "pnpm run build && pnpm run start",

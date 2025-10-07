@@ -118,22 +118,13 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
           // Create a summary of the chat
           console.log(`Messages count: ${processedMessages.length}`);
 
-          summary = await createSummary({
+          const summaryResult = await createSummary({
             messages: [...processedMessages],
             env: context.cloudflare?.env,
             apiKeys,
             providerSettings,
-            promptId,
-            contextOptimization,
-            onFinish(resp) {
-              if (resp.usage) {
-                logger.debug('createSummary token usage', JSON.stringify(resp.usage));
-                cumulativeUsage.completionTokens += resp.usage.completionTokens || 0;
-                cumulativeUsage.promptTokens += resp.usage.promptTokens || 0;
-                cumulativeUsage.totalTokens += resp.usage.totalTokens || 0;
-              }
-            },
           });
+          summary = summaryResult.summary;
           dataStream.writeData({
             type: 'progress',
             label: 'summary',
@@ -166,10 +157,8 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
             apiKeys,
             files,
             providerSettings,
-            promptId,
-            contextOptimization,
-            summary,
-            onFinish(resp) {
+            summary: summary || '',
+            onFinish(resp: any) {
               if (resp.usage) {
                 logger.debug('selectContext token usage', JSON.stringify(resp.usage));
                 cumulativeUsage.completionTokens += resp.usage.completionTokens || 0;
@@ -307,21 +296,45 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
           message: 'Generating Response',
         } satisfies ProgressAnnotation);
 
-        const result = await streamText({
-          messages: [...processedMessages],
-          env: context.cloudflare?.env,
-          options,
-          apiKeys,
-          files,
-          providerSettings,
-          promptId,
-          contextOptimization,
-          contextFiles: filteredFiles,
-          chatMode,
-          designScheme,
-          summary,
-          messageSliceId,
-        });
+        let result;
+
+        try {
+          result = await streamText({
+            messages: [...processedMessages],
+            env: context.cloudflare?.env,
+            options,
+            apiKeys,
+            files,
+            providerSettings,
+            promptId,
+            contextOptimization,
+            contextFiles: filteredFiles,
+            chatMode,
+            designScheme,
+            summary,
+            messageSliceId,
+          });
+        } catch (error: any) {
+          logger.error('Error in streamText:', error);
+
+          // Send error message to the client
+          dataStream.writeData({
+            type: 'error',
+            value: error.message || 'Failed to generate response',
+          });
+
+          throw error;
+        }
+
+        if (!result) {
+          const errorMsg = 'No result returned from streamText';
+          logger.error(errorMsg);
+          dataStream.writeData({
+            type: 'error',
+            value: errorMsg,
+          });
+          throw new Error(errorMsg);
+        }
 
         (async () => {
           for await (const part of result.fullStream) {
